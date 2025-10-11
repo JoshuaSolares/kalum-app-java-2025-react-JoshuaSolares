@@ -17,18 +17,18 @@ interface MenuItem {
 
 
 export const SideNav: React.FC<SideNavProps> = ({ open, onClose }) => {
-
+  
     const drawerWidth = 260;
-
+  
     const menuItem: MenuItem[] = [
         {
             text: 'Carreras Técnicas',
-            icon: <SchoolIcon />,
+            icon: <SchoolIcon/>,
             path: '/carreras'
         },
         {
             text: 'Usuarios',
-            icon: <PeopleIcon />,
+            icon: <PeopleIcon/>,
             path: '/usuarios'
         }
     ]
@@ -36,12 +36,12 @@ export const SideNav: React.FC<SideNavProps> = ({ open, onClose }) => {
     const handleItemClick = (path: string) => {
         onClose();
     }
-
+  
     return (
-        <Drawer anchor='left' open={open} onClose={onClose} ModalProps={{ keepMounted: true }} sx={{ '& .MuiDrawer-paper': { top: '64px', height: 'calc(100% - 64px)' } }}>
+        <Drawer anchor='left' open={open} onClose={onClose} ModalProps={{ keepMounted: true }} sx={{'& .MuiDrawer-paper': {top: '64px', height: 'calc(100% - 64px)'}}}>
             <List sx={{ width: drawerWidth }}>
                 {
-                    menuItem.map((item, index) => (
+                    menuItem.map((item,index) => (
                         <ListItemButton key={index} onClick={() => handleItemClick(item.path)}>
                             <ListItemIcon>{item.icon}</ListItemIcon>
                             <ListItemText primary={item.text}></ListItemText>
@@ -50,5 +50,5 @@ export const SideNav: React.FC<SideNavProps> = ({ open, onClose }) => {
                 }
             </List>
         </Drawer>
-    )
+  )
 }

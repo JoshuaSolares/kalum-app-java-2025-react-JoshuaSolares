@@ -11,22 +11,33 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-
     const { login } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        login(email, password).then((token) => {
-            Swal.fire({
-                title: 'Login',
-                text: 'Bienvenido al Sistema',
-                icon: 'success'
-            }).then((confirm) => {
-                if (confirm.isConfirmed) {
-                    console.log(token);
-                    onLoginSuccess();
-                }
-            });
+        login(email, password).then((token: any) => {
+            if (token) {
+                Swal.fire({
+                    title: 'Login',
+                    text: 'Bienvenido al Sistema',
+                    icon: 'success'
+                }).then((confirm) => {
+                    if (confirm.isConfirmed) {
+                        onLoginSuccess();
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: 'Login',
+                    text: 'Usuario o contraseña incocorrectos, vuelva intentar',
+                    icon: 'error'
+                }).then((confirm) => {
+                    if (confirm.isConfirmed) {
+                        console.log(confirm);
+                    }
+                });
+            }
+
         });
     }
 

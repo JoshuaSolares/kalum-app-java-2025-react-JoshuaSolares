@@ -10,7 +10,7 @@ interface AppBarMenuProps {
 
 export const AppBarMenu: React.FC<AppBarMenuProps> = ({onMenuClick, onLogout}) => {
 
-  return (
+return (
     <AppBar position='fixed'>
         <Toolbar>
             <IconButton edge="start" color='inherit' aria-label='menu' onClick={onMenuClick} sx={{ mr: 2 }}>
@@ -26,6 +26,6 @@ export const AppBarMenu: React.FC<AppBarMenuProps> = ({onMenuClick, onLogout}) =
             </Tooltip>
         </Toolbar>
     </AppBar>
-  )
+)
 
 }

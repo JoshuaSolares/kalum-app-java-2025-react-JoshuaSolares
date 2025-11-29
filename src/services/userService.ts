@@ -33,11 +33,14 @@ export interface UserCreateResponse {
 export const userService = {
     findAll: async (): Promise<UserListResponse> => {
         const response = await api.get<UserListResponse>(`users`);
-        console.log(response.data);
         return response.data;
     }, 
     save: async(user: UserCreateDTO): Promise<UserCreateResponse> => {
         const response = await api.post<UserCreateResponse>(`users`,user);
         return response.data;
+    },
+    delete: async (id: string): Promise<any> => {
+        const response = await api.delete(`users/${id}`);
+        return response;
     }
 }

@@ -1,12 +1,12 @@
 import {useDispatch, useSelector} from 'react-redux'
-import type { AppDispath, RootState } from '../store/store'
+import type { AppDispatch, RootState } from '../store/store'
 import { loginFailure, loginStart, loginSuccess, logout } from '../store/slices/auth/authSlice';
 import { authService } from '../services/authService';
 
 
 export const useAuth = () => {
     const {user,token,loading,error} = useSelector((state: RootState) => state.auth)
-    const dispatch = useDispatch<AppDispath>();
+    const dispatch = useDispatch<AppDispatch>();
     
     const handlerLogin = async (username: string, password:string) => {
         dispatch(loginStart());
@@ -32,5 +32,4 @@ export const useAuth = () => {
         login: handlerLogin,
         logout: handlerLogout
     }
-} 
-
+}

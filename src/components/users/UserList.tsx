@@ -31,39 +31,41 @@ import Swal from 'sweetalert2';
 import { useUser } from '../../hooks/useUser';
 
 interface User {
-    userId: string;
+    id: string;
     username: string;
+    fullName: string;
     email: string;
-    passwordHash: string;
     identityUser: string;
+    phoneNumber: string;
+    passwordHash: string;
     createdAt: string;
 }
 
 
 
 export const UserList: React.FC = () => {
-    const { getUsers } = useUser();
-    const [users, setUsers] = useState<User[]>([]);
+    const { users, getUsers, createUser, deleteUser } = useUser();
     const [loading, setLoading] = useState<boolean>(true);
     const [page, setPage] = useState<number>(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [formUsername, setFormUsername] = useState<string>('');
+    const [formFirstName, setFormFirstName] = useState<string>('');
+    const [formLastName, setFormLastName] = useState<string>('');
     const [formEmail, setFormEmail] = useState<string>('');
+    const [formPhoneNumber, setPhoneNumber] = useState<string>('');
     const [formPassword, setFormPassword] = useState<string>('');
     const [showPassword, setShowPassword] = useState(false);
 
-    const fethUsers = async () => {
-        setLoading(true);
-        const response:any = await getUsers();
-        setUsers(response.data);
-        setLoading(false);
-    }
-
 
     useEffect(() => {
-        fethUsers();
+        const fetchData = async () => {
+            setLoading(true);
+            await getUsers();
+            setLoading(false);
+        }
+        fetchData();
     }, []);
 
     const handleToggleShowPassword = () => {
@@ -71,10 +73,16 @@ export const UserList: React.FC = () => {
     }
 
 
-    const handleOpenModal = (user?: User) => {
-    if (user) {
+    const handleOpenModal = (user?: any) => {
+        if (user) {
+            console.log(user);
             setSelectedUser(user);
             setFormUsername(user.username);
+            setFormFirstName(user.firstname);
+            setFormLastName(user.lastname);
+            setFormEmail(user.email);
+            setPhoneNumber(user.phoneNumber);
+
         } else {
             setSelectedUser(null);
             setFormUsername('');
@@ -82,7 +90,7 @@ export const UserList: React.FC = () => {
         setModalOpen(true);
     }
 
-    const handleDelete = (id: string) => {
+    const handleDelete = async (id: string) => {
         Swal.fire({
             title: "Esta seguro de eliminar el registro?",
             text: "Los cambios no serán reversibles!",
@@ -93,11 +101,22 @@ export const UserList: React.FC = () => {
             confirmButtonText: "Si, eliminar!"
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire({
-                    title: "Eliminado",
-                    text: "El registro fue eliminado correctamente",
-                    icon: "success"
+                deleteUser(id).then(response => {
+                    if (response.status == 204) {
+                        Swal.fire({
+                            title: "Eliminado",
+                            text: "El registro fue eliminado correctamente",
+                            icon: "success"
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Eliminado",
+                            text: "Hubo un problema al momento de eliminar el registro",
+                            icon: "error"
+                        });
+                    }
                 });
+
             }
         });
     }
@@ -115,17 +134,24 @@ export const UserList: React.FC = () => {
         setFormUsername('');
     }
 
-    const handleSave = () => {
-        handleCloseModal();
-        Swal.fire({
-            title: 'Usuarios',
-            text: 'El registro fue almacenado correctamente.',
-            icon: 'success'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                handleCloseModal();
-            }
-        });
+    const handleSave = async () => {
+        const data = {
+            'username': formUsername,
+            'firstname': formFirstName,
+            'lastname': formLastName,
+            'email': formEmail,
+            'phoneNumber': formPhoneNumber,
+            'password': formPassword
+        };
+        const response = await createUser(data);
+        if (response.success) {
+            handleCloseModal();
+            Swal.fire({
+                title: 'Usuarios',
+                text: response.message ? response.message : 'El registro fue almacenado correctamente.',
+                icon: 'success'
+            });
+        }
     }
 
     const paginatedUsers = users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -150,27 +176,29 @@ export const UserList: React.FC = () => {
                         <TableRow>
                             <TableCell>ID</TableCell>
                             <TableCell>USERNAME</TableCell>
+                            <TableCell>FULL NAME</TableCell>
                             <TableCell>EMAIL</TableCell>
                             <TableCell>IDENTITY</TableCell>
-                            <TableCell>FULL NAME</TableCell>
+                            <TableCell>PHONE</TableCell>
                             <TableCell align='right'>ACCIONES</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {paginatedUsers.map(((user:any) => (
+                        {paginatedUsers.map(((user) => (
                             <TableRow key={user.id}>
                                 <TableCell>{user.id}</TableCell>
                                 <TableCell>{user.username}</TableCell>
+                                <TableCell>{user.fullName}</TableCell>
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>{user.identityUser}</TableCell>
-                                <TableCell>{user.fullName}</TableCell>
+                                <TableCell>{user.phoneNumber}</TableCell>
                                 <TableCell align="right">
                                     <IconButton onClick={() => { handleOpenModal(user) }} color='primary'>
                                         <Edition />
                                     </IconButton>
                                 </TableCell>
                                 <TableCell align='right'>
-                                    <IconButton color='error' onClick={() => { handleDelete(user.userId) }}>
+                                    <IconButton color='error' onClick={() => { handleDelete(user.id) }}>
                                         <DeleteIcon />
                                     </IconButton>
                                 </TableCell>
@@ -187,11 +215,14 @@ export const UserList: React.FC = () => {
                 </Table>
                 <TablePagination component="div" count={users.length} page={page} onPageChange={handleChangePage} rowsPerPage={rowsPerPage} onRowsPerPageChange={handleChangeRowsPerPage} rowsPerPageOptions={[5, 10, 20]} />
             </TableContainer>
-            <Dialog open={modalOpen} fullWidth maxWidth="sm" onClose={handleCloseModal}>
+            <Dialog open={modalOpen} fullWidth maxWidth="sm" onClose={handleCloseModal} disableEnforceFocus>
                 <DialogTitle>{selectedUser ? 'Editar Usuario' : 'Agregar Usuario'}</DialogTitle>
                 <DialogContent>
                     <TextField label="Username" fullWidth margin='normal' value={formUsername} onChange={(e) => setFormUsername(e.target.value)} />
+                    <TextField label="First Name" fullWidth margin='normal' value={formFirstName} onChange={(e) => setFormFirstName(e.target.value)} />
+                    <TextField label="Last Name" fullWidth margin='normal' value={formLastName} onChange={(e) => setFormLastName(e.target.value)} />
                     <TextField label="Email" type='email' fullWidth margin='normal' value={formEmail} onChange={(e) => setFormEmail(e.target.value)} />
+                    <TextField label="Phone Number" fullWidth margin='normal' value={formPhoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
                     <TextField label="Password" type={showPassword ? 'text' : 'password'} fullWidth margin='normal' value={formPassword} onChange={(e) => setFormPassword(e.target.value)}
                         InputProps={{
                             endAdornment: (

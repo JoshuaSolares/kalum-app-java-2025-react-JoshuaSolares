@@ -54,35 +54,17 @@ export const UserList: React.FC = () => {
     const [formPassword, setFormPassword] = useState<string>('');
     const [showPassword, setShowPassword] = useState(false);
 
-    const fethUsers = () => {
-        setTimeout(async () => {
-            const data = [
-                {
-                    userId: '1',
-                    username: 'Edwin Tumax',
-                    email: 'edwintumax@gmail.com',
-                    passwordHash: '445fadsfdasxxtghh',
-                    identityUser: '0',
-                    createdAt: '2025-10-15T02:45:34'
-                },
-                {
-                    userId: '2',
-                    username: 'Nancy Tumax',
-                    email: 'nancytumax@gmail.com',
-                    passwordHash: '445fadsfdasxxtghh',
-                    identityUser: '1',
-                    createdAt: '2025-11-15T02:45:34'
-                }
-            ];
-            setUsers(data);
-            setLoading(false);
-        }, 3000);
+    const fethUsers = async () => {
+        setLoading(true);
+        const response:any = await getUsers();
+        setUsers(response.data);
+        setLoading(false);
     }
 
 
     useEffect(() => {
         fethUsers();
-    });
+    }, []);
 
     const handleToggleShowPassword = () => {
         setShowPassword((prev) => !prev);
@@ -170,18 +152,18 @@ export const UserList: React.FC = () => {
                             <TableCell>USERNAME</TableCell>
                             <TableCell>EMAIL</TableCell>
                             <TableCell>IDENTITY</TableCell>
-                            <TableCell>CREATED AT</TableCell>
+                            <TableCell>FULL NAME</TableCell>
                             <TableCell align='right'>ACCIONES</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {paginatedUsers.map(((user) => (
-                            <TableRow key={user.userId}>
-                                <TableCell>{user.userId}</TableCell>
+                        {paginatedUsers.map(((user:any) => (
+                            <TableRow key={user.id}>
+                                <TableCell>{user.id}</TableCell>
                                 <TableCell>{user.username}</TableCell>
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>{user.identityUser}</TableCell>
-                                <TableCell>{user.createdAt}</TableCell>
+                                <TableCell>{user.fullName}</TableCell>
                                 <TableCell align="right">
                                     <IconButton onClick={() => { handleOpenModal(user) }} color='primary'>
                                         <Edition />

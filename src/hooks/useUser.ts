@@ -8,7 +8,8 @@ export const useUser = () => {
     const dispatch = useDispatch<AppDispath>();
 
     const getUsers = async () => {
-        const response = await userService.findAll(); 
+        const response = await userService.findAll();
+        return response; 
     }
     
     return {

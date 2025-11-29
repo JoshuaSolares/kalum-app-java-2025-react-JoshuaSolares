@@ -25,9 +25,10 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import Edition from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Visibility, VisibilityOff} from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 import Swal from 'sweetalert2';
+import { useUser } from '../../hooks/useUser';
 
 interface User {
     userId: string;
@@ -41,6 +42,7 @@ interface User {
 
 
 export const UserList: React.FC = () => {
+    const { getUsers } = useUser();
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [page, setPage] = useState<number>(0);
@@ -53,7 +55,7 @@ export const UserList: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     const fethUsers = () => {
-        setTimeout(() => {
+        setTimeout(async () => {
             const data = [
                 {
                     userId: '1',
@@ -208,12 +210,12 @@ export const UserList: React.FC = () => {
                 <DialogContent>
                     <TextField label="Username" fullWidth margin='normal' value={formUsername} onChange={(e) => setFormUsername(e.target.value)} />
                     <TextField label="Email" type='email' fullWidth margin='normal' value={formEmail} onChange={(e) => setFormEmail(e.target.value)} />
-                    <TextField label="Password" type={ showPassword ? 'text' : 'password'} fullWidth margin='normal' value={formPassword} onChange={(e) => setFormPassword(e.target.value)}
-                        InputProps = {{
+                    <TextField label="Password" type={showPassword ? 'text' : 'password'} fullWidth margin='normal' value={formPassword} onChange={(e) => setFormPassword(e.target.value)}
+                        InputProps={{
                             endAdornment: (
                                 <InputAdornment position='end'>
-                                    <IconButton onClick={() => setShowPassword(!showPassword)} edge = 'end' aria-label='toggle password visibility'>
-                                        { showPassword ? <VisibilityOff/> : <Visibility/> }
+                                    <IconButton onClick={() => setShowPassword(!showPassword)} edge='end' aria-label='toggle password visibility'>
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 </InputAdornment>
                             )

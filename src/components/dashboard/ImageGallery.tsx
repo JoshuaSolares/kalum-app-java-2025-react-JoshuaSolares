@@ -46,16 +46,27 @@ const itemData: ImageCareerItem[] = [
 
 export const ImageGallery: React.FC = () => {
     return (
-        <Box sx={{width: "100%", textAlign:"center"}}>
-            <Box sx={{mt:2, mb:4}}> 
-                <img src={logotipo} alt='Técnologico Kalum' style={{width: "250px", maxWidth:"90%", marginBottom: "8px"}}/>
-                <Typography variant='h4' sx={{fontWeight: "bold", mt:1}}>TECNOLOGICO KALUM</Typography>
+        <Box sx={{ width: "100%", textAlign: "center" }}>
+            <Box sx={{ mt: 2, mb: 4 }}>
+                <img src={logotipo} alt='Técnologico Kalum' style={{ width: "250px", maxWidth: "90%", marginBottom: "8px" }} />
+                <Typography variant='h4' sx={{ fontWeight: "bold", mt: 1 }}>TECNOLOGICO KALUM</Typography>
             </Box>
             <Grid container spacing={3} columns={12} sx={{ padding: 3, display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
                 {itemData.map((item) => (
-                    <Grid key={item.id} sx={{ display: "flex" }}>
+                    <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}  sx={{ display: "flex" }}>
                         <Card sx={{ borderRadius: 2, overflow: "hidden" }}>
-                            <CardMedia component="img" image={item.img} height='220' alt={item.title} sx={{ width: "100%", aspectRatio: "16/9", objectFit: "cover" }} />
+                            <CardMedia
+                                component="img"
+                                image={item.img}
+                                alt={item.title}
+                                sx={{
+                                    width: "100%",
+                                    height: 250,
+                                    objectFit: "contain",
+                                    backgroundColor: "#000", // opcional si quieres fondo detrás
+                                    padding: 1
+                                }}
+                            />
                             <CardContent>
                                 <Typography variant='h6' sx={{ fontWeight: "bold", mb: 0.5 }}>{item.title}</Typography>
                                 <Typography variant='body2' sx={{ color: "text.secondary" }}>
@@ -78,3 +89,4 @@ export const ImageGallery: React.FC = () => {
         </Box>
     )
 }
+

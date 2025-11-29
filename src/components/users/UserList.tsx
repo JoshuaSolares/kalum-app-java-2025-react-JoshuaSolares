@@ -44,7 +44,7 @@ interface User {
 
 
 export const UserList: React.FC = () => {
-    const { users, getUsers, createUser, deleteUser } = useUser();
+    const { users, getUsers, createUser, deleteUser, updateUserThunk } = useUser();
     const [loading, setLoading] = useState<boolean>(true);
     const [page, setPage] = useState<number>(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -75,14 +75,12 @@ export const UserList: React.FC = () => {
 
     const handleOpenModal = (user?: any) => {
         if (user) {
-            console.log(user);
             setSelectedUser(user);
             setFormUsername(user.username);
             setFormFirstName(user.firstname);
             setFormLastName(user.lastname);
             setFormEmail(user.email);
             setPhoneNumber(user.phoneNumber);
-
         } else {
             setSelectedUser(null);
             setFormUsername('');
@@ -135,6 +133,7 @@ export const UserList: React.FC = () => {
     }
 
     const handleSave = async () => {
+        let response: any;
         const data = {
             'username': formUsername,
             'firstname': formFirstName,
@@ -143,13 +142,24 @@ export const UserList: React.FC = () => {
             'phoneNumber': formPhoneNumber,
             'password': formPassword
         };
-        const response = await createUser(data);
-        if (response.success) {
+        if (selectedUser) {
+            response = await updateUserThunk(selectedUser.id, data);
+        } else {
+            response = await createUser(data);
+        }
+        if (response.success || response.status === 204) {
             handleCloseModal();
             Swal.fire({
                 title: 'Usuarios',
                 text: response.message ? response.message : 'El registro fue almacenado correctamente.',
                 icon: 'success'
+            });
+        } else {
+            handleCloseModal();
+            Swal.fire({
+                title: 'Usuarios',
+                text: response.message ? response.message : 'El registro fue almacenado correctamente.',
+                icon: 'error'
             });
         }
     }

@@ -1,7 +1,7 @@
 import type { AppDispatch, RootState } from "../store/store";
 import { useDispatch, useSelector } from "react-redux"
 import {userService} from '../services/userService';
-import { loadingUsers, addUser, removeUser } from '../store/slices/users/usersSlice';
+import { loadingUsers, addUser, removeUser, updateUser } from '../store/slices/users/usersSlice';
 
 
 export const useUser = () => {
@@ -26,11 +26,20 @@ export const useUser = () => {
         }
         return response;
     }
+
+    const updateUserThunk = async (id: string, user: any) => {
+        const response = await userService.update(id, user);
+        if(response.status == 204) {
+            dispatch(updateUser({id, ...user}));
+        }
+        return response;
+    }
     
     return {
         users,
         getUsers,
         createUser,
-        deleteUser
+        deleteUser,
+        updateUserThunk
     }
 }   

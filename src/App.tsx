@@ -7,9 +7,10 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { LoginForm } from './components/auth/LoginForm';
 import Swal from 'sweetalert2';
 import { CareerList } from './components/careers/CareerList';
-import { UserList } from './components/users/UserList';
 import { useAuth } from './hooks/useAuth';
 import { ProtectedRoute } from './routes/ProtectedRoute';
+import { UserList } from './components/users/UserList';
+import { DashBoard } from './components/dashboard/Dashboard';
 
 function App() {
   const { isAuthenticated, logout } = useAuth();
@@ -43,22 +44,23 @@ function App() {
         </>
       )}
       <Routes>
-        <Route path='/login' element={<LoginForm onLoginSuccess={() => window.location.href = '/users'} />} />
-
+        <Route path='/login' element={<LoginForm onLoginSuccess={() => window.location.href = '/dashboard'} />} />
+        <Route path='/dashboard' element={
+          <DashBoard/>
+        }>
+        </Route>
         <Route path='/careers' element={
           <ProtectedRoute>
             <CareerList />
           </ProtectedRoute>      
         } />
-
-        <Route path='/users' element={
+        <Route path='/users' element= {
           <ProtectedRoute>
-            <UserList />
-          </ProtectedRoute>      
+            <UserList/>
+          </ProtectedRoute>
         } />
-
-        <Route path='/' element={<Navigate to="/users" />} />
-      </Routes>
+        <Route path='/' element={<Navigate to="/dashboard" />} />
+      </Routes>      
     </Router>
   )
 }

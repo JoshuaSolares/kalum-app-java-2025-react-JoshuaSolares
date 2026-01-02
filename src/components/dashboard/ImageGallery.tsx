@@ -49,7 +49,7 @@ const itemData: ImageCareerItem[] = [
 export const ImageGallery: React.FC = () => {
     const navigate = useNavigate();
 
-    const handlerAsigjsonedCareer = () => {
+    const handlerAsigjsonedCareer = (careerId: string) => {
         const userString = localStorage.getItem('user');
         if (userString) {
             const user = JSON.parse(userString);
@@ -61,7 +61,7 @@ export const ImageGallery: React.FC = () => {
                     footer: '<a href="#">Kalum v1</a>'
                 }).then(response => {
                     if (response.isConfirmed) {
-                        navigate("/examenes-admision");
+                        navigate(`/examenes-admision/${careerId}`);
                     }
                 });
             }
@@ -101,7 +101,7 @@ export const ImageGallery: React.FC = () => {
                                 </Typography>
                             </div>
                             <CardActions sx={{ justifyContent: "space-between" }}>
-                                <Button size='small' onClick={() => handlerAsigjsonedCareer()}>ASIGNARME</Button>
+                                <Button size='small' onClick={() => handlerAsigjsonedCareer(item.id)}>ASIGNARME</Button>
                                 <Button size='small'>COMPARTIR|</Button>
                             </CardActions>
                         </Card>

@@ -12,6 +12,9 @@ import { ProtectedRoute } from './routes/ProtectedRoute';
 import { UserList } from './components/users/UserList';
 import { DashBoard } from './components/dashboard/Dashboard';
 import { AdmissionExamList } from './components/admissionExams/AdmissionExamList';
+import { StatusExamenAdmin } from './components/admissionExams/StatusExamenAdmin';
+import { FinalizeCandidateProcess } from './components/admissionExams/FinalizeCandidateProcess';
+
 
 function App() {
   const { isAuthenticated, logout } = useAuth();
@@ -47,26 +50,41 @@ function App() {
       <Routes>
         <Route path='/login' element={<LoginForm onLoginSuccess={() => window.location.href = '/dashboard'} />} />
         <Route path='/dashboard' element={
-          <DashBoard/>
+          <DashBoard />
         }>
         </Route>
         <Route path='/careers' element={
           <ProtectedRoute>
             <CareerList />
-          </ProtectedRoute>      
+          </ProtectedRoute>  
         } />
         <Route path='/examenes-admision' element={
-            <AdmissionExamList/>
+          <AdmissionExamList/>
         }
         />
-        <Route path='/users' element= {
+        <Route path='/examenes-admision/:careerId' element={
+          <AdmissionExamList />
+        }
+        />
+        <Route path='/candiate/finalize-process/:noExpediente' element={
           <ProtectedRoute>
-            <UserList/>
+            <FinalizeCandidateProcess />
+          </ProtectedRoute>
+        } />
+        <Route path='/users' element={
+          <ProtectedRoute>
+            <UserList />
+          </ProtectedRoute>
+        } />
+        <Route path='/status-examen-admision' element={
+          <ProtectedRoute>
+            <StatusExamenAdmin />
           </ProtectedRoute>
         } />
         <Route path='/' element={<Navigate to="/dashboard" />} />
-      </Routes>      
+      </Routes> 
     </Router>
   )
 }
+//http://localhost:5173/candiate/finalize-process/EXP-20240011
 export default App

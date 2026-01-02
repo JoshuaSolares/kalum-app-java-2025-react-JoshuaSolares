@@ -8,6 +8,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 import { Drawer, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { CalendarMonth, PermContactCalendar } from '@mui/icons-material';
 
 interface SideNavProps {
     open: boolean;
@@ -52,6 +53,11 @@ export const SideNav: React.FC<SideNavProps> = ({ open, onClose }) => {
             text: 'Examenes Admisión',
             icon: <CalendarMonthIcon/>,
             path: '/examenes-admision'
+        },
+        {
+            text: 'Resultado examen admision',
+            icon: <PermContactCalendar/>,
+            path: '/status-examen-admision'
         }
     ]
 

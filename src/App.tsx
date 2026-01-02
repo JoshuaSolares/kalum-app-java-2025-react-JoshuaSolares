@@ -11,6 +11,7 @@ import { useAuth } from './hooks/useAuth';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 import { UserList } from './components/users/UserList';
 import { DashBoard } from './components/dashboard/Dashboard';
+import { AdmissionExamList } from './components/admissionExams/AdmissionExamList';
 
 function App() {
   const { isAuthenticated, logout } = useAuth();
@@ -54,6 +55,10 @@ function App() {
             <CareerList />
           </ProtectedRoute>      
         } />
+        <Route path='/examenes-admision' element={
+            <AdmissionExamList/>
+        }
+        />
         <Route path='/users' element= {
           <ProtectedRoute>
             <UserList/>
